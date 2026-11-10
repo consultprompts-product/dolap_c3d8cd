@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-primary: #2A6B56;
+  --brand-secondary: #E5E7EB;
+  --site-bg: #0A1F18;
+  --site-surface: #122B22;
+  --site-border: #1E4034;
+  --site-heading: #E8EBE9;
+  --site-body: #A3B8B0;
+  /* Aliases matching the mockup's own :root variable names — Claude sometimes
+     carries an inline style referencing var(--color-bg) etc. straight through
+     from the mockup instead of converting it to the --site-* or --brand-*
+     names. Defining both means either form resolves correctly. */
+  --color-primary: #2A6B56;
+  --color-secondary: #E5E7EB;
+  --color-bg: #0A1F18;
+  --color-surface: #122B22;
+  --color-border: #1E4034;
+  --color-heading: #E8EBE9;
+  --color-body: #A3B8B0;
+}
+
+/* The mockup's single HTML file gets its page-wide dark/light background for
+   free from <body class="bg-customBg ...">; a Next.js page component has no
+   equivalent body tag to carry that class onto, so any section Claude leaves
+   without its own explicit bg-[var(--site-bg)]/bg-[var(--site-surface)] class
+   would otherwise fall through to the browser's default white background
+   instead of this palette's actual bg color. This rule is the fallback that
+   makes that fall-through resolve to the right color regardless. */
+body {
+  background-color: var(--site-bg);
+  color: var(--site-body);
+}
+
+/* Hero background photo's focal point, set independently per breakpoint
+   from the Branding panel's click-to-position picker (client.hero_focal_
+   desktop/mobile) and applied by nextJsAppFile via
+   style.setProperty('--hero-focal-desktop'/'--hero-focal-mobile', ...) on
+   #hero-bg-image itself. A full-bleed hero's own aspect ratio changes
+   dramatically between a wide desktop banner and a narrow/tall mobile one,
+   so the same object-position crop rarely looks right on both — this is
+   why it's two separate variables switched by a media query, not one.
+   Falls back to plain center-center until a client sets one. */
+#hero-bg-image {
+  object-position: var(--hero-focal-mobile, center);
+}
+@media (min-width: 768px) {
+  #hero-bg-image {
+    object-position: var(--hero-focal-desktop, center);
+  }
+}
